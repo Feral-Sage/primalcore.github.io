@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sliding Container</title>
+    <style>
+      @font-face {
+        font-family: 'Agency FB';
+        /* Give it a name */
+        src: url('fonts/AgencyFB-Regular.woff2') format('woff2'),
+          /* Adjust paths and formats as needed */
+          url('fonts/AgencyFB-Regular.woff') format('woff'),
+          url('fonts/AgencyFB-Regular.ttf') format('truetype');
+        /* Include other formats for browser compatibility */
+        font-weight: normal;
+        /* Define font weight */
+        font-style: normal;
+        /* Define font style */
+        font-display: swap;
+        /* Optional: Helps with performance */
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background-color: #101010;
+        font-family: 'Agency FB', sans-serif;
+      }
+
+      .animated-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        --x: calc(var(--posX, 0) * 1px);
+        --y: calc(var(--posY, 0) * 1px);
+        background-image:
+          linear-gradient(115deg, rgb(211 255 215), rgb(0 0 0)),
+          radial-gradient(90% 100% at calc(50% + var(--x)) calc(0% + var(--y)), rgb(200 200 200), rgb(022 000 045)),
+          radial-gradient(100% 100% at calc(80% - var(--x)) calc(0% - var(--y)), rgb(250 255 000), rgb(036 000 000)),
+          radial-gradient(150% 210% at calc(100% + var(--x)) calc(0% + var(--y)), rgb(020 175 125), rgb(000 010 255)),
+          radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255 077 000), rgb(000 200 255)),
+          linear-gradient(60deg, rgb(255 000 000), rgb(120 086 255));
+        background-blend-mode: overlay, overlay, difference, difference, difference, normal;
+      }
+
+      .container {
+        width: 600%;
+        min-height: 800px;
+        display: flex;
+        position: relative;
+        top: 25vh;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .slide {
+        width: calc(100%/6);
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-top: 3px solid black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 20px;
+        color: #fff;
+      }
+
+      nav {
+        position: relative;
+        top: 25vh;
+        left: 50%;
+        height: 30px;
+        transform: translateX(-50%);
+        padding: 0px;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 0;
+        width: 10%;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        line-height: 1vh;
+        background:
+          linear-gradient(to right, rgba(100, 200, 200, 0), rgba(100, 200, 200, 0)),
+          linear-gradient(to right, rgba(255, 0, 0, 1), rgba(255, 0, 180, 1), rgba(0, 100, 200, 1));
+        background-size: 100% 3px, 0 3px;
+        background-position: 100% 100%, 0 100%;
+        background-repeat: no-repeat;
+        transition: background-size 400ms;
+      }
+
+      a:hover {
+        background-size: 0 3px, 100% 3px;
+      }
+
+      nav img {
+        width: 150px;
+        height: 150px;
+        border-radius: 5px;
+      }
+
+      .slidecontainer {
+        width: 1000px;
+        margin: 20px auto;
+        flex-grow: 1;
+      }
+
+      .title {
+        width: 100%;
+        text-align: left;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .summary-container {
+        width: 100%;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 10px;
+		text-align: justify;
+      }
+
+      .summary-container p {
+        margin: 0;
+        color: #fff;
+      }
+
+      .item {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        padding: 10px 0;
+      }
+
+      .image-box {
+        min-width: 100px;
+        max-width: 100px;
+        height: 100px;
+        margin-left: 20px;
+        border: 5px solid transparent;
+        border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
+        border-image-slice: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+      }
+
+      .image-box img {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: cover;
+      }
+
+      .description {
+        flex-grow: 1;
+		padding-left: 20px;
+        padding-right: 20px;
+		text-align: justify;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="animated-background"></div>
+    <nav>
+      <a href="#" data-slide="0">SCOUT</a>
+      <a href="#" data-slide="1">PROWLER</a>
+      <a href="#" data-slide="2">CORSAIR</a>
+      <a href="#" data-slide="3">TEMPEST</a>
+      <a href="#" data-slide="4">GUARDIAN</a>
+      <a href="#" data-slide="5">RAVAGER</a>
+    </nav>
+    <div class="container">
+      <div class="slide">
+        <div class="slidecontainer">
+          <div class="title">SCOUT EDITION (Budget Build)</div>
+          <div class="summary-container">
+            <p>Introducing the Scout Edition, a pre-built gaming PC engineered for performance and style. Housed in the stunning DIYPC ARGB-Q3.v2-W panoramic case, this system showcases its powerful components through tempered glass panels, while optimized airflow keeps everything running cool. The Intel Core i3-12100 processor and ASRock B660M PRO RS motherboard provide a solid foundation, while the MSI LP GeForce RTX 3050 6GB graphics card delivers immersive visuals. 16GB of Patriot Viper Steel RGB DDR4 3600MHz memory and a Crucial P3 500GB NVMe SSD ensure lightning-fast load times and smooth multitasking. Cooling is handled by the Cooler Master Hyper 212 Spectrum V3, and power is supplied by the reliable Cooler Master XG650 Plus Platinum 650W PSU. <br>
+              <br> The Scout Edition isn't just about raw power; it's about the complete gaming experience. From the vibrant ARGB lighting to the whisper-quiet operation, every detail has been carefully considered. Whether you're exploring vast open worlds, competing in intense online battles, or creating your own content, the Scout Edition is ready to take your gaming to the next level. This meticulously assembled system offers the perfect balance of performance, aesthetics, and convenience, allowing you to focus on what matters most: conquering the game. <br>
+              <br> Parts are subject to change due to availability/price changes, but swapped out components will offer similar performance for price and we will inform you of these changes if by chance they are needed for your order.
+			  <br><br>
+            </p>
+          </div>
+		  <div class="title">Components for the Build</div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/case.jpg" alt="Case">
+            </div>
+            <div class="description">
+              <p>Unleash the power of PC gaming with this stunning pre-built system housed in the DIYPC ARGB-Q3.v2-W panoramic case. This machine isn't just a powerhouse; it's a visual masterpiece, ready to elevate your gaming experience to the next level. The 360-degree view offered by the tempered glass front and side panels lets you admire the high-performance components within, while the optimized airflow keeps everything running cool and quiet.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/cpu.jpg" alt="CPU">
+            </div>
+            <div class="description">
+              <p>Experience a significant boost in your PC's performance with the Intel Core i3-12100 processor. This 12th Gen Alder Lake processor delivers the speed and responsiveness you need for work, entertainment, and everything in between. Featuring four cores and a 3.3 GHz base clock speed, the i3-12100 handles everyday tasks with ease, from browsing the web and streaming videos to working on documents and light gaming.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/gpu.jpg" alt="GPU">
+            </div>
+            <div class="description">
+              <p>The MSI LP GeForce RTX 3050 6GB is the perfect graphics card for gamers and creators looking for a balance of performance and compact size. This low-profile card delivers the power of the RTX 3050 in a design that fits seamlessly into smaller PC cases, making it ideal for compact gaming rigs.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/memory.jpg" alt="Memory">
+            </div>
+            <div class="description">
+              <p>This pre-built system comes equipped with 16GB of Patriot Viper Steel RGB DDR4 3600MHz memory, ensuring a smooth and responsive computing experience for gaming, content creation, and everyday use. This high-performance RAM delivers the speed and style you need to get the most out of your new PC.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/motherboard.jpg" alt="Motherboard">
+            </div>
+            <div class="description">
+              <p>The ASRock B660M PRO RS is the perfect foundation for your 12th or 13th Gen Intel Core processor build. This Micro-ATX motherboard packs a punch, offering a robust feature set and excellent performance in a compact form factor. Designed for both gamers and everyday users, the B660M PRO RS delivers stability, connectivity, and expandability to power your system.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/storage.jpg" alt="Storage">
+            </div>
+            <div class="description">
+              <p>Your new pre-built PC comes equipped with a Crucial P3 500GB NVMe SSD, providing you with blazing-fast storage for your operating system, applications, and games. Experience the incredible speed and responsiveness of NVMe technology right out of the box.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/psu.jpg" alt="PSU">
+            </div>
+            <div class="description">
+              <p>The Cooler Master XG650 Plus Platinum is a high-performance, fully modular 650W power supply designed to deliver clean, reliable power to your PC. With its 80+ Platinum certification, ARGB lighting, and built-in information display, this PSU is a perfect choice for gamers, enthusiasts, and anyone who demands the best.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="image-box">
+              <img src="images/scout/cooling.jpg" alt="Cooling">
+            </div>
+            <div class="description">
+              <p>The Cooler Master Hyper 212 Spectrum V3 is a high-performance CPU air cooler designed to keep your processor running at optimal temperatures, even under heavy loads. With its ARGB lighting and efficient cooling design, it's the perfect choice for gamers, enthusiasts, and anyone who wants a cool and stylish system.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide">2</div>
+      <div class="slide">3</div>
+      <div class="slide">4</div>
+      <div class="slide">5</div>
+      <div class="slide">6</div>
+    </div>
+    <script>
+      const container = document.querySelector('.container');
+      const navLinks = document.querySelectorAll('nav a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const slideIndex = parseInt(this.dataset.slide);
+          const containerWidth = container.offsetWidth;
+          const slideWidth = containerWidth / 6;
+          const targetPosition = -slideWidth * slideIndex;
+          container.style.transform = `translateX(${targetPosition}px)`;
+        });
+      });
+      document.body.addEventListener("pointermove", (e) => {
+        const {
+          currentTarget: el,
+          clientX: x,
+          clientY: y
+        } = e;
+        const {
+          top: t,
+          left: l,
+          width: w,
+          height: h
+        } = el.getBoundingClientRect();
+        el.style.setProperty('--posX', x - l - w / 2);
+        el.style.setProperty('--posY', y - t - h / 2);
+      });
+    </script>
+  </body>
+</html>
